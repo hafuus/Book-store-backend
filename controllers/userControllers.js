@@ -1,5 +1,6 @@
 const users = require("../models/userModel")
 const bcrypt = require('bcrypt')
+const jwt = require("jsonwebtoken")
 
 exports.signUp = async(req, res) => {
     try{
@@ -17,8 +18,15 @@ exports.signUp = async(req, res) => {
         let passsword = req.body.password
         let hashed = await bcrypt.hash(passsword, saltRounds);
 
+        const token = await jwt.sign({
+          data: {email:req.body.email},
+          expiresIn: "1h"
+        },
+        process.env.JWTSECRET);
+        console.log(token)
+
         await users.create(req.body)
-        return res.status(200).json({message: "created"})
+        return res.status(200).json({message: "created" , token})
         
     }catch(e){
         return res.status(200).json({message: e.message})
@@ -39,7 +47,8 @@ exports.logIn = async(req , res)=>{
       
   
   }catch(e){
-      return res.status(200).json({message: e.message})
+      return res.status(200).json({message: "error"})
+      console.log(e.message)
   }
 }
   
