@@ -3,6 +3,11 @@ const dotenv = require ("dotenv");
 const cors = require("cors")
 
 const userRoutes = require("./Routers/userRoutes")
+const bookRoutes = require("./Routers/Book Routes")
+const commentRoutes = require("./Routers/commentRoute")
+
+
+
 
 const app = express();
 
@@ -14,6 +19,10 @@ dotenv.config({ path: "./.env" });
 require("./server")
 
 app.use("/user" , userRoutes)
+app.use("/book" , bookRoutes)
+app.use("/comment" , commentRoutes)
+
+
 
 
 port = 7000

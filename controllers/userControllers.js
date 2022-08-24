@@ -6,49 +6,48 @@ exports.signUp = async(req, res) => {
     try{
         let checkEmail = await users.findOne({email:req.body.email})
         if (checkEmail != null){
-            return res.status(200).json({message: "email is already exist"})
+            return res.status(400).json({message: "email is already exist"})
         }
         if (req.body.password!== req.body.confirmPassword){
-            return res.status(200).json({message: "wrong email or password"})
+            return res.status(400).json({message: "wrong email or password"})
         }
         if (req.body.password.length < 7){
-            return res.status(200).json({message: "short password"})
+            return res.status(400).json({message: "short password"})
         }
         const saltRounds = 10;
         let passsword = req.body.password
         let hashed = await bcrypt.hash(passsword, saltRounds);
-
+        
         const token = await jwt.sign({
           data: {email:req.body.email},
           expiresIn: "1h"
         },
         process.env.JWTSECRET);
         console.log(token)
-
+        req.body.password = hashed
         await users.create(req.body)
         return res.status(200).json({message: "created" , token})
         
     }catch(e){
-        return res.status(200).json({message: e.message})
+        return res.status(400).json({message: e.message})
     }
 };
+
 exports.logIn = async(req , res)=>{
   try{
-      let found = await users.findOne({email:req.body.email})
-      let user = await users.bcrypt.compare(req.body.password, found.password);
+      const found = await users.findOne({email:req.body.email})
+      const compare = await bcrypt.compare(req.body.password, found.password);
       if (!found){
-          return res.status(200).json({message: "email doesn't exist"})
+          return res.status(400).json({message: "email doesn't exist"})
       }
-      if (user==false){
-          return res.status(200).json({message: "wrong email or password"})
+      if (compare === false){
+          return res.status(400).json({message: "wrong password"})
       }
       
-          return res.status(200).json({message: "login success"})
-      
-  
+          return res.status(200).json({message: "welcome"})
   }catch(e){
-      return res.status(200).json({message: "error"})
-      console.log(e.message)
+      return res.status(200).json({message: e.message})
+      // console.log(e.message)
   }
 }
   
