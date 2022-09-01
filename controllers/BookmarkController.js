@@ -1,9 +1,9 @@
-const comments = require("../models/commentModel")
+const bookmark = require("../models/BookmarkModel")
 
 exports.getAll = async(req , res) => {
     try{
-        let Comments = comments.find({})
-        return res.status(200).json({comments: Comments}) 
+        let bookmarks = bookmark.find({})
+        return res.status(200).json({message: bookmark}) 
     }catch(e){
         return res.status(400).json({message:e.message}) 
     }
@@ -26,7 +26,8 @@ exports.getOne = async(req , res) => {
 exports.create = async(req , res) => {
     try{
 
-    //  await comments.create(req.body);
+    //  await bookmark.create(req.body);
+      console.log(req.body)
      return res.status(200).json({message:"created"})
 } catch(e){
      return res.status(400).json({message:e.message})

@@ -19,11 +19,11 @@ exports.signUp = async(req, res) => {
         let hashed = await bcrypt.hash(passsword, saltRounds);
         
         const token = await jwt.sign({
-          data: {email:req.body.email},
+          data: {email: req.body.email},
           expiresIn: "1h"
         },
         process.env.JWTSECRET);
-        console.log(token)
+       console.log(token)
         req.body.password = hashed
         await users.create(req.body)
         return res.status(200).json({message: "created" , token})
@@ -43,10 +43,15 @@ exports.logIn = async(req , res)=>{
       if (compare === false){
           return res.status(400).json({message: "wrong password"})
       }
-      
+
+      const token = await jwt.sign({
+        data: { id: found._id , email: found.email},
+        expiresIn: "1h"
+      },
+      process.env.JWTSECRET);
           return res.status(200).json({message: "welcome"})
   }catch(e){
-      return res.status(200).json({message: e.message})
+      return res.status(400).json({message: e.message})
       // console.log(e.message)
   }
 }
@@ -55,10 +60,10 @@ exports.logIn = async(req , res)=>{
 exports.getUsers = async(req, res) => {
   try{
     let findUsers = await users.find({});
-    console.log(findUsers)
-   res.status(200).json({ data: findUsers });
+    // console.log(findUsers)
+   return res.status(200).json({ data: findUsers });
  }catch(e){
-  res.status(200).json({ message: e.message });
+  return res.status(200).json({ message: e.message });
 }
 }
 
@@ -112,5 +117,26 @@ exports.changePassword = async(req , res)=>{
   return res.status(200).json({message:"password changed"})   
   }catch(e){
       return res.status(200).json({message:e.message})
+  }
+}
+
+
+exports.protect = (req , res , next )=>{
+  try{
+   const token = req.headers.authorization
+    // console.log(token)
+   if(!token){
+    return res.status(401).json({message: "pleas log in"})
+  }
+  jwt.verify(token, process.env.JWTSECRET, function(error, decoded){
+      if(error){
+        return res.status(401).json({message: "token expired, please log in"})
+      }
+      //  console.log(decoded)
+      // req.user = decoded.data
+     }) 
+    next(); 
+  }catch(e){
+    // console.log (e.data.message) 
   }
 }

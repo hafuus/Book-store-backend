@@ -1,15 +1,15 @@
 const mongoose = require("mongoose")
 
 const commentSchema = mongoose.Schema({
-    Comment: String,
+    comments: String,
     Author: {
         type: mongoose.Types.ObjectId,
         ref: "User",
       },
-    Book: {
-      type: mongoose.Types.ObjectId,
-      ref: "User",
-    },
+    // Book: {
+    //   type: mongoose.Types.ObjectId,
+    //   ref: "User",
+    // },
 });
 
         
