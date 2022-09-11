@@ -22,7 +22,7 @@ require("./server")
 app.use("/user" , userRoutes)
 app.use("/book" , bookRoutes)
 app.use("/comment" , commentRoutes)
-app.use("/bookmark" , BookMarkRoutes)
+app.use("/bookmarks" , BookMarkRoutes)
 
 
 

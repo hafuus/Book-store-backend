@@ -8,9 +8,10 @@ router.route("/")
 .post(upload.single("image"), BookController.create)
 .get(BookController.getAll)
 
+router.route("/:search").get(BookController.search)
+
 router
 .route("/:id")
-.get(BookController.getOne)
 .put(BookController.edit)
 .delete(BookController.delete)
 

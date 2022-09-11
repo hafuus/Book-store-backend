@@ -2,7 +2,7 @@ const comments = require("../models/commentModel")
 
 exports.getAll = async(req , res) => {
     try{
-        let Comments = comments.find({})
+        let Comments = await comments.find({})
         return res.status(200).json({comments: Comments}) 
     }catch(e){
         return res.status(400).json({message:e.message}) 
@@ -25,8 +25,8 @@ exports.getOne = async(req , res) => {
 
 exports.create = async(req , res) => {
     try{
-
-    //  await comments.create(req.body);
+// console.log(req.body)
+     await comments.create(req.body);
      return res.status(200).json({message:"created"})
 } catch(e){
      return res.status(400).json({message:e.message})
@@ -35,12 +35,12 @@ exports.create = async(req , res) => {
 
 
 exports.edit = async (req, res) => {
-    // try {
-    //   await Book.findByIdAndUpdate(req.params.id, req.body);
-    //   res.status(200).json({ message: "updated" });
-    // } catch (e) {
-    //   res.status(400).json({ message: "error" });
-    // }
+    try {
+      await Book.findByIdAndUpdate(req.params.id, req.body);
+      res.status(200).json({ message: "updated" });
+    } catch (e) {
+      res.status(400).json({ message: "error" });
+    }
   };
   
   exports.delete = async (req, res) => {

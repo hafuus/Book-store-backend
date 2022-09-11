@@ -36,10 +36,11 @@ exports.signUp = async(req, res) => {
 exports.logIn = async(req , res)=>{
   try{
       const found = await users.findOne({email:req.body.email})
-      const compare = await bcrypt.compare(req.body.password, found.password);
       if (!found){
-          return res.status(400).json({message: "email doesn't exist"})
-      }
+        return res.status(400).json({message: "email already exist"})
+    }
+      const compare = await bcrypt.compare(req.body.password, found.password);
+    
       if (compare === false){
           return res.status(400).json({message: "wrong password"})
       }
@@ -49,10 +50,10 @@ exports.logIn = async(req , res)=>{
         expiresIn: "1h"
       },
       process.env.JWTSECRET);
-          return res.status(200).json({message: "welcome"})
+           res.status(200).json({message: "welcome",token})
   }catch(e){
-      return res.status(400).json({message: e.message})
-      // console.log(e.message)
+       res.status(400).json({message: e.message})
+      
   }
 }
   
@@ -132,11 +133,13 @@ exports.protect = (req , res , next )=>{
       if(error){
         return res.status(401).json({message: "token expired, please log in"})
       }
-      //  console.log(decoded)
-      // req.user = decoded.data
+       
+    
+      req.user = decoded.data.id
      }) 
     next(); 
   }catch(e){
-    // console.log (e.data.message) 
+    console.log (e.data.message) 
   }
 }
+

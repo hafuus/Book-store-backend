@@ -12,23 +12,27 @@ exports.getAll = async(req , res) => {
     
 }
 
-exports.getOne = async(req , res) => {
+exports.search = async(req , res) => {
     try{
-        let found = await books.findOne({id: req.body.id})
-        if(!found){
-            return res.status(200).json({message:"sorry! we don't have that book"})
-        }
-        return res.status(400).json({message:found , Books: Books})
+        console.log(req.body)
+        let found = await books.find({title:req.body.title})
+        //  let found = await books.findOne({}).populate("title");
+        // if(!found){
+        //     return res.status(400).json({message:"sorry! we don't have that book"})
+        // }
+        console.log(found);
+
+        return res.status(200).json({Books: found})
 
     }catch(e){
-        return res.status(400).json({message:"error"})
+        return res.status(400).json({message:e.message})
     }
 }
 
 exports.create = async(req , res) => {
     try{
+
     // console.log(req.body)
-    // console.log(req.file.filename)
     req.body.image =req.file.filename;
     await books.create(req.body);
     return res.status(200).json({message:"created"})
@@ -39,12 +43,13 @@ exports.create = async(req , res) => {
 
 
 exports.edit = async (req, res) => {
-    // try {
-    //   await Book.findByIdAndUpdate(req.params.id, req.body);
-    //   res.status(200).json({ message: "updated" });
-    // } catch (e) {
-    //   res.status(400).json({ message: "error" });
-    // }
+  //   try {
+  //     // await books.Model.findByIdAndUpdate(req.params.id, req.body);
+  //     console.log(req.params.id)
+  //     res.status(200).json({ message: "updated" , books });
+  //   } catch (e) {
+  //     res.status(400).json({ message: e.message });
+  //   }
   };
   
   exports.delete = async (req, res) => {
