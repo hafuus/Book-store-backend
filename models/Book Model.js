@@ -16,7 +16,7 @@ const BookSchema = mongoose.Schema({
     image: String,
     Book: {
       type: mongoose.Types.ObjectId,
-      ref: "User",
+      ref: "Books",
     },
 });
 

@@ -2,7 +2,12 @@ const books = require("../models/Book Model")
 
 exports.getAll = async(req , res) => {
     try{
-        let Books = await books.find({})
+      let Books
+      if(req.query.search){
+         Books = await books.find({title: req.query.search})
+      }else{
+      Books = await books.find({})
+        }
    
          res.status(200).json({books: Books}) 
          
@@ -15,8 +20,11 @@ exports.getAll = async(req , res) => {
 exports.search = async(req , res) => {
     try{
         console.log(req.body)
-        let found = await books.find({title:req.body.title})
-        //  let found = await books.findOne({}).populate("title");
+        // let found = await books.find({title:req.body.title})
+         let found = await books.findOne({title:req.body.title}).populate({
+          path : "Book", 
+          select :  "title"
+         });
         // if(!found){
         //     return res.status(400).json({message:"sorry! we don't have that book"})
         // }
@@ -43,21 +51,22 @@ exports.create = async(req , res) => {
 
 
 exports.edit = async (req, res) => {
-  //   try {
-  //     // await books.Model.findByIdAndUpdate(req.params.id, req.body);
-  //     console.log(req.params.id)
-  //     res.status(200).json({ message: "updated" , books });
-  //   } catch (e) {
-  //     res.status(400).json({ message: e.message });
-  //   }
+    try {
+      // req.body.image =req.file.filename;
+      const updated = await books.findByIdAndUpdate(req.params.id, req.body);
+      return res.status(200).json({ message: "updated" , updated });
+    } catch (e) {
+      return res.status(400).json({ message: e.message });
+    }
   };
   
   exports.delete = async (req, res) => {
     try {
-      await books.findByIdAndDelete(req.params.id);
-      res.status(200).json({ message: "deleted book", books });
+      let deleted = await books.findByIdAndDelete(req.params.id);
+      // console.log(Books)
+      res.status(200).json({ message: "deleted book", deleted });
     } catch (e) {
-      res.status(400).json({ message: "error" });
+      res.status(400).json({ message: e.message });
     }
   };
   

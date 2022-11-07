@@ -4,7 +4,7 @@ const BookMarkController = require("../controllers/BookmarkController")
 const userController = require("../controllers/userControllers")
 
 
-router.route("/").post(userController.protect,BookMarkController.create)
+router.route("/").post(BookMarkController.create)
 router.route("/").get( BookMarkController.getAll)
 
 router.route("/:id").delete(BookMarkController.delete)

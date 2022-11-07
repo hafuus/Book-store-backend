@@ -37,7 +37,7 @@ exports.logIn = async(req , res)=>{
   try{
       const found = await users.findOne({email:req.body.email})
       if (!found){
-        return res.status(400).json({message: "email already exist"})
+        return res.status(400).json({message: "user doesn't exist"})
     }
       const compare = await bcrypt.compare(req.body.password, found.password);
     
@@ -143,3 +143,91 @@ exports.protect = (req , res , next )=>{
   }
 }
 
+exports.protect = (req , res , next )=>{
+  try{
+   const token = req.headers.authorization
+    // console.log(token)
+   if(!token){
+    return res.status(401).json({message: "pleas log in"})
+  }
+  jwt.verify(token, process.env.JWTSECRET, function(error, decoded){
+      if(error){
+        return res.status(401).json({message: "token expired, please log in"})
+      }
+       
+    
+      req.user = decoded.data.id
+     }) 
+    next(); 
+  }catch(e){
+    console.log (e.data.message) 
+  }
+}
+
+
+exports.protect = (req , res , next )=>{
+  try{
+   const token = req.headers.authorization
+    // console.log(token)
+   if(!token){
+    return res.status(401).json({message: "pleas log in"})
+  }
+  jwt.verify(token, process.env.JWTSECRET, function(error, decoded){
+      if(error){
+        return res.status(401).json({message: "token expired, please log in"})
+      }
+       
+    
+      req.user = decoded.data.id
+     }) 
+    next(); 
+  }catch(e){
+    console.log (e.data.message) 
+  }
+}
+
+
+
+
+exports.protect2 = (req , res , next )=>{
+  try{
+   const token = req.headers.authorization
+    // console.log(token)
+  //  if(!token){
+  //   return res.status(401).json({message: "pleas log in"})
+  // }
+  // jwt.verify(token, process.env.JWTSECRET, function(error, decoded){
+  //     if(error){
+  //       return res.status(401).json({message: "token expired, please log in"})
+  //     }
+       
+    
+  //     req.user = decoded.data.id
+  //    }) 
+    next(); 
+  }catch(e){
+    console.log (e.data.message) 
+  }
+}
+
+
+exports.protect = (req , res , next )=>{
+  try{
+   const token = req.headers.authorization
+    // console.log(token)
+   if(!token){
+    return res.status(401).json({message: "pleas log in"})
+  }
+  jwt.verify(token, process.env.JWTSECRET, function(error, decoded){
+      if(error){
+        return res.status(401).json({message: "token expired, please log in"})
+      }
+       
+    
+      req.user = decoded.data.id
+     }) 
+    next(); 
+  }catch(e){
+    console.log (e.data.message) 
+  }
+}
